@@ -250,8 +250,8 @@ def edit_venue_submission(venue_id):
       venue.addres = form.address.data
       venue.image_link = form.image_link.data
       venue.facebook_link = form.facebook_link.data
-      venue.seeking_description = form.seeking_description
-      venue.seeking_talent = form.seeking_talent
+      venue.seeking_description = form.seeking_description.data
+      venue.seeking_talent = form.seeking_talent.data
       venue.genres.clear()
       for genre in form.genres.data:
             venue.genres.append(Genre.query.get(genre.id))
