@@ -1,8 +1,9 @@
 from datetime import datetime
 from email.policy import default
+from sys import flags
 from flask_wtf import Form
-from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField, TimeField, DateField
-from wtforms.validators import DataRequired, AnyOf, URL
+from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField, TimeField, DateField,validators
+from wtforms.validators import DataRequired, AnyOf, URL, Regexp
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 import Fyyur.models as models
 
@@ -89,9 +90,11 @@ class VenueForm(Form):
     address = StringField(
         'address', validators=[DataRequired()]
     )
-    phone = StringField(
-        'phone'
-    )
+    phone = StringField( 
+        'phone', validators=[DataRequired(), 
+        Regexp(r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$", 
+        message="Phone number should only contain digits")] 
+        )
     image_link = StringField(
         'image_link'
     )
@@ -182,10 +185,12 @@ class ArtistForm(Form):
             ('WY', 'WY'),
         ]
     )
-    phone = StringField(
-        # TODO implement validation logic for state
-        'phone'
-    )
+    phone = StringField( 
+        'phone', validators=[DataRequired(), 
+        Regexp(r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$", 
+        message="Phone number should only contain digits")] 
+        )
+
     image_link = StringField(
         'image_link'
     )

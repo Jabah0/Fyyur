@@ -72,9 +72,14 @@ def show_venue(venue_id):
   # TODO: replace with real venue data from the venues table, using venue_id
   now = datetime.now()
   venue=Venue.query.get(venue_id)
-  upcoming_shows_count = Show.query.filter(Show.venue_id == venue_id).filter(Show.start_date > now).count()
-  past_shows_count = Show.query.filter(Show.venue_id == venue_id).filter(Show.start_date < now).count()
-  return render_template('pages/show_venue.html', now=now, venue=venue, past_shows_count=past_shows_count, upcoming_shows_count=upcoming_shows_count)
+
+  upcoming_shows = db.session.query(Show).join(Artist).filter(Show.venue_id==venue_id).filter(Show.start_date > now).all()
+  upcoming_shows_count = len(upcoming_shows)
+
+  past_shows = db.session.query(Show).join(Artist).filter(Show.venue_id==venue_id).filter(Show.start_date < now).all()
+  past_shows_count = len(past_shows)
+  
+  return render_template('pages/show_venue.html', venue=venue,past_shows=past_shows, upcoming_shows=upcoming_shows, past_shows_count=past_shows_count, upcoming_shows_count=upcoming_shows_count)
 
 #  Create Venue
 #  ----------------------------------------------------------------
@@ -173,10 +178,12 @@ def show_artist(artist_id):
   # shows the artist page with the given artist_id
   # [DONE]  TODO: replace with real artist data from the artist table, using artist_id
   now = datetime.now()
-  upcoming_shows_count = Show.query.filter(Show.artist_id == artist_id).filter(Show.start_date > now).count()
-  past_shows_count = Show.query.filter(Show.artist_id == artist_id).filter(Show.start_date < now).count()
+  upcoming_shows = db.session.query(Show).join(Venue).filter(Show.artist_id==artist_id).filter(Show.start_date > now).all()
+  upcoming_shows_count= len(upcoming_shows)
+  past_shows = db.session.query(Show).join(Venue).filter(Show.artist_id==artist_id).filter(Show.start_date < now).all()
+  past_shows_count = len(past_shows)
   artist = Artist.query.get(artist_id)
-  return render_template('pages/show_artist.html', artist=artist, now=now,
+  return render_template('pages/show_artist.html', artist=artist, upcoming_shows=upcoming_shows, past_shows=past_shows,
                           upcoming_shows_count=upcoming_shows_count, past_shows_count=past_shows_count)
 
 @apps.route('/artists/addTime/<int:artist_id>')                          

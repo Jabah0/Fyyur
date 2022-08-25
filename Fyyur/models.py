@@ -21,6 +21,7 @@ class Show(db.Model):
     start_date = db.Column(db.DateTime, primary_key = True)
     venue = db.relationship('Venue',back_populates="shows")
     artist = db.relationship('Artist',back_populates="shows")
+    
 
 class Venue(db.Model):
     __tablename__ = 'Venues'
@@ -36,8 +37,8 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean())
     seeking_description = db.Column(db.String(1000))
     shows = db.relationship("Show", back_populates="venue", cascade="all, delete")
-    genres = db.relationship(
-        "Genre", secondary=Venue_Genre, back_populates="venues")
+    genres = db.relationship("Genre", secondary=Venue_Genre, back_populates="venues")
+    
 
     def get_venues():
         return Venue.query.all()
@@ -59,8 +60,7 @@ class Artist(db.Model):
     seeking_description = db.Column(db.String(1000))
     seeking_venue = db.Column(db.Boolean())
     shows = db.relationship("Show", back_populates="artist", cascade="all, delete")
-    genres = db.relationship(
-        "Genre", secondary=Artist_Genre, back_populates="artists")
+    genres = db.relationship("Genre", secondary=Artist_Genre, back_populates="artists")
 
     def get_artists():
         return Artist.query.all()
